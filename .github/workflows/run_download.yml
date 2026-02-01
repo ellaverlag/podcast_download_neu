@@ -1,0 +1,24 @@
+name: Podigee Bulk Download
+on: workflow_dispatch
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install requests
+      - name: Run script
+        env:
+          PODIGEE_TOKEN: ${{ secrets.PODIGEE_TOKEN }}
+          PODCAST_ID: ${{ secrets.PODCAST_ID }}
+        run: python download_podcasts.py
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: podcast-mp3-bundle
+          path: downloads/
